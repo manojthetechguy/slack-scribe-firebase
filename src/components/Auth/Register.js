@@ -91,8 +91,7 @@ class Register extends React.Component {
               )}?d=identicon`,
             })
             .then(() => {
-              this.saveUser(createdUser).then(() => {
-              });
+              this.saveUser(createdUser);
             });
         })
         .then(() => {
