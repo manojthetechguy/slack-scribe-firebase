@@ -92,7 +92,6 @@ class Register extends React.Component {
             })
             .then(() => {
               this.saveUser(createdUser).then(() => {
-                console.log("user saved");
               });
             });
         })
@@ -140,7 +139,7 @@ class Register extends React.Component {
           <Form onSubmit={this.handleSubmit} size="large">
             <Segment stacked>
               <Form.Input
-                fluid
+                fluid={true}
                 name="username"
                 value={username}
                 icon="user"
@@ -151,7 +150,7 @@ class Register extends React.Component {
                 className={this.handleInputError(errors, "username")}
               />
               <Form.Input
-                fluid
+                fluid={true}
                 name="email"
                 value={email}
                 icon="mail"
@@ -162,7 +161,7 @@ class Register extends React.Component {
                 className={this.handleInputError(errors, "email")}
               />
               <Form.Input
-                fluid
+                fluid={true}
                 name="password"
                 value={password}
                 icon="lock"
@@ -173,7 +172,7 @@ class Register extends React.Component {
                 className={this.handleInputError(errors, "password")}
               />
               <Form.Input
-                fluid
+                fluid={true}
                 name="passwordConfirmation"
                 value={passwordConfirmation}
                 icon="repeat"
@@ -187,7 +186,7 @@ class Register extends React.Component {
                 disabled={loading}
                 className={loading ? "loading" : ""}
                 color="orange"
-                fluid
+                fluid={true}
                 size="large"
                 onSubmit={() => this.handleSubmit()}
               >

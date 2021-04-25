@@ -1,8 +1,38 @@
 html,
 body,
-
 .app {
-    height: 100vh;
-    background: #eee;
-    padding: 1em;
+  height: 100vh;
+  background: #eee;
+  padding: 1em;
+}
+
+.messages {
+  height: 440px;
+  overflow-y: scroll;
+}
+.messages__progess {
+  height: 58vh;
+  overflow-y: scroll;
+}
+/* MessageForm */
+.message__form {
+  position: fixed !important;
+  bottom: 1em;
+  left: 0;
+  right: 1em;
+  z-index: 200;
+  margin-left: 320px !important;
+}
+
+.message__self {
+  border-left: 2px solid orange;
+  padding-left: 8px;
+}
+
+.message__image {
+  padding: 1em;
+}
+
+.progress__bar {
+  margin: 0.5em 0 0 0 !important;
 }

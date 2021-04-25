@@ -43,7 +43,6 @@ class Login extends React.Component {
         .auth()
         .signInWithEmailAndPassword(this.state.email, this.state.password)
         .then((signedInUser) => {
-          console.log(signedInUser);
           this.setState({
             loading: false,
           });
@@ -82,7 +81,7 @@ class Login extends React.Component {
           <Form onSubmit={this.handleSubmit} size="large">
             <Segment stacked>
               <Form.Input
-                fluid
+                fluid={true}
                 name="email"
                 value={email}
                 icon="mail"
@@ -93,7 +92,7 @@ class Login extends React.Component {
                 className={this.handleInputError(errors, "email")}
               />
               <Form.Input
-                fluid
+                fluid={true}
                 name="password"
                 value={password}
                 icon="lock"
@@ -107,7 +106,7 @@ class Login extends React.Component {
                 disabled={loading}
                 className={loading ? "loading" : ""}
                 color="violet"
-                fluid
+                fluid={true}
                 size="large"
                 onSubmit={() => this.handleSubmit()}
               >
