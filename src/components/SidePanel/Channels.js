@@ -7,12 +7,15 @@ import firebase from "../../firebase";
 class Channels extends React.Component {
   state = {
     channels: [],
+    channel: null,
+    messagesRef: firebase.database().ref("messages"),
     modal: false,
     channelName: "",
     channelDetails: "",
     channelsRef: firebase.database().ref("channels"),
     firstLoad: true,
     activeChannel: "",
+    notifications: [],
   };
 
   componentDidMount() {
@@ -28,7 +31,46 @@ class Channels extends React.Component {
     this.state.channelsRef.on("child_added", (snap) => {
       loadedChannels.push(snap.val());
       this.setState({ channels: loadedChannels }, () => this.setFirstChnnel());
+      this.addNotificationListeners(snap.key);
     });
+  };
+
+  addNotificationListeners = (channelId) => {
+    this.state.messagesRef.child(channelId).on("value", (snap) => {
+      if (this.state.channel) {
+        this.handleNotifications(
+          channelId,
+          this.state.channelId,
+          this.state.notifications,
+          snap
+        );
+      }
+    });
+  };
+
+  handleNotifications = (channelId, currentChannelId, notifications, snap) => {
+    let lastTotal = 0;
+    let index = notifications.findIndex(
+      (notification) => notification.id === channelId
+    );
+    if (index !== -1) {
+      if (channelId !== currentChannelId) {
+        lastTotal = notifications[index].total;
+
+        if (snap.numChildren() - lastTotal > 0) {
+          notifications[index].count = snap.numChildren() - lastTotal;
+        }
+      }
+      notifications[index].lastKnownTotal = snap.numChildren();
+    } else {
+      notifications.push({
+        id: channelId,
+        total: snap.numChildren(),
+        lastKnownTotal: snap.numChildren(),
+        count: 0,
+      });
+    }
+    this.setState({ notifications });
   };
 
   removeListeners = () => {
@@ -104,6 +146,7 @@ class Channels extends React.Component {
     this.setActiveChannel(channel);
     this.props.setCurrentChannel(channel);
     this.props.setPrivateChannel(false);
+    this.setState({ channel });
   };
 
   displayChannels = (channels) =>
