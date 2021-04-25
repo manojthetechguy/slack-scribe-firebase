@@ -7,7 +7,9 @@ import Message from "./Message";
 
 class Messages extends React.Component {
   state = {
+    privateChannel: this.props.isPrivateChannel,
     messagesRef: firebase.database().ref("messages"),
+    privateMessagesRef: firebase.database().ref("privateMessages"),
     messages: [],
     messagesLoading: true,
     channel: this.props.currentChannel,
@@ -30,9 +32,15 @@ class Messages extends React.Component {
     this.addMessagesListener(channelId);
   };
 
+  getMessagesRef = () => {
+    const { messagesRef, privateChannel, privateMessagesRef } = this.state;
+    return privateChannel ? privateMessagesRef : messagesRef;
+  };
+
   addMessagesListener = (channelId) => {
     let loadedMessages = [];
-    this.state.messagesRef.child(channelId).on("child_added", (snap) => {
+    const ref = this.getMessagesRef();
+    ref.child(channelId).on("child_added", (snap) => {
       loadedMessages.push(snap.val());
       this.setState({ messages: loadedMessages });
     });
@@ -99,7 +107,9 @@ class Messages extends React.Component {
   };
 
   displayChannelName = (channel) => {
-    return channel ? `#${channel.name}` : "";
+    return channel
+      ? `${this.state.privateChannel ? "@" : "#"}${channel.name}`
+      : "";
   };
 
   render() {
@@ -113,6 +123,7 @@ class Messages extends React.Component {
       searchLoading,
       searchTerm,
       searchResults,
+      privateChannel,
     } = this.state;
     return (
       <>
@@ -122,6 +133,7 @@ class Messages extends React.Component {
           numUniqueUsers={numUniqueUsers}
           handleSearchChange={this.handleSearchChange}
           searchTerm={searchTerm}
+          isPrivateChannel={privateChannel}
         />
         <Segment>
           <Comment.Group
@@ -137,6 +149,8 @@ class Messages extends React.Component {
           currentChannel={channel}
           currentUser={user}
           isProgressBarVisible={this.isProgressBarVisible}
+          isPrivateChannel={privateChannel}
+          getMessagesRef={this.getMessagesRef}
         />
       </>
     );
